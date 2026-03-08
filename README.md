@@ -1,5 +1,8 @@
 # Fourier-Gibbs-Phenomenon-Explained-Geometrically
 ![Preview](assets/preview.png)
+https://ninjas1337.github.io/Fourier-Gibbs-Phenomenon-Explained-Geometrically/
+
+
 An inuitive approach to Fourier and an geometrical explanation of the Gibbs Phenomenon
 The Gibbs Overshoot Is Built In
 An interactive visualization showing why the Gibbs overshoot exists, why it converges to ≈ 8.95%, and why it can never go away — explained geometrically through phasor chains and tip speed.
