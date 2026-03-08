@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+const { useState, useRef, useEffect, useCallback } = React;
 
 const COLORS = {
   bg: "#0a0a0f",
@@ -19,7 +19,7 @@ const COLORS = {
   velocity: "#ff8844",
 };
 
-export default function FourierPhasors() {
+function FourierPhasors() {
   const phasorCanvasRef = useRef(null);
   const waveCanvasRef = useRef(null);
   const ptsCanvasRef = useRef(null);
@@ -123,7 +123,7 @@ export default function FourierPhasors() {
     // Velocity arrows — show resultant tip velocity (sum of all arm contributions)
     if (showVelocity && arms.length > 0) {
       const last = arms[arms.length - 1];
-      
+
       // Compute resultant tip velocity: vector sum of all tangential velocities
       // For arm with harmonic k: dx/dt = -k·A_k·sin(k·t), dy/dt = k·A_k·cos(k·t)
       let totalVx = 0, totalVy = 0;
@@ -136,12 +136,12 @@ export default function FourierPhasors() {
         totalVy += avy;
         armVelocities.push({ avx, avy, k, amp, velMag: k * amp, i: arm.i });
       }
-      
+
       // Scale for display (map to screen coords: x→right, y→up but canvas y is down)
       const resultantVx = totalVx * velScale;
       const resultantVy = -totalVy * velScale; // flip y for canvas
       const resultantSpeed = Math.sqrt(totalVx * totalVx + totalVy * totalVy);
-      
+
       const tipX = last.ex, tipY = last.ey;
       const arrowEndX = tipX + resultantVx;
       const arrowEndY = tipY + resultantVy;
@@ -203,7 +203,7 @@ export default function FourierPhasors() {
           chainY = endY;
         }
       }
-      
+
       // Resultant velocity arrow (thick, bright orange) — drawn on top
       ctx.strokeStyle = COLORS.velocity;
       ctx.lineWidth = 2.5;
@@ -211,7 +211,7 @@ export default function FourierPhasors() {
       ctx.moveTo(tipX, tipY);
       ctx.lineTo(arrowEndX, arrowEndY);
       ctx.stroke();
-      
+
       // Arrowhead
       const aAngle = Math.atan2(arrowEndY - tipY, arrowEndX - tipX);
       ctx.fillStyle = COLORS.velocity;
@@ -221,19 +221,19 @@ export default function FourierPhasors() {
       ctx.lineTo(arrowEndX - 9 * Math.cos(aAngle + 0.35), arrowEndY - 9 * Math.sin(aAngle + 0.35));
       ctx.closePath();
       ctx.fill();
-      
+
       // Speed label
       ctx.fillStyle = COLORS.velocity;
       ctx.font = "bold 12px 'Courier New', monospace";
       ctx.textAlign = "left";
       ctx.fillText(`|v| = ${resultantSpeed.toFixed(3)}`, arrowEndX + 6, arrowEndY - 6);
-      
+
       // If a specific arm is highlighted and arm vectors off, show its contribution dashed
       if (highlightArm > 0 && highlightArm <= numHarmonics && !showArmVectors) {
         const ha = arms[highlightArm - 1];
         const hvx = -ha.k * ha.amp * Math.sin(ha.angle) * velScale;
         const hvy = -(ha.k * ha.amp * Math.cos(ha.angle)) * velScale;
-        
+
         ctx.strokeStyle = "rgba(255,136,68,0.4)";
         ctx.lineWidth = 1.5;
         ctx.setLineDash([4, 3]);
@@ -242,7 +242,7 @@ export default function FourierPhasors() {
         ctx.lineTo(tipX + hvx, tipY + hvy);
         ctx.stroke();
         ctx.setLineDash([]);
-        
+
         ctx.fillStyle = "rgba(255,136,68,0.6)";
         ctx.font = "11px 'Courier New', monospace";
         ctx.fillText(`arm ${highlightArm}: ${ha.velMag.toFixed(3)}`, tipX + hvx + 4, tipY + hvy + 12);
@@ -311,9 +311,7 @@ export default function FourierPhasors() {
       }
 
       // Also find the target (no overshoot) position — at the square wave value of 1.0
-      // The y-position where the sum equals exactly 1.0 on the phasor plane
       let tx = cx, ty = cy;
-      // Find angle where sum ≈ 1.0 (just past the overshoot peak)
       let targetTheta = Math.PI / 2; // midpoint of high section
       for (let h = 1; h <= numHarmonics; h++) {
         const { k, amp } = getCoeff(h);
@@ -326,22 +324,15 @@ export default function FourierPhasors() {
       const pulse = 0.6 + 0.4 * Math.sin(Date.now() * 0.004);
       const overshootPct = ((maxSum - 1.0) * 100).toFixed(1);
 
-      // Line from target-level y to overshoot point (vertical on phasor plane)
-      // Show the excess as a red segment on the orbit
       ctx.strokeStyle = `rgba(255,68,102,${0.6 * pulse})`;
       ctx.lineWidth = 2;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      // Horizontal reference: where y would be if sum = 1.0
-      // The phasor y-displacement is proportional to the imaginary sum
-      // The overshoot is purely in the vertical (imaginary/y) direction from center
-      const refY = cy - (1.0 / 1.0) * (getCoeff(1).amp * scale * numHarmonics * 0.32);
       ctx.moveTo(ox - 20, oy);
       ctx.lineTo(ox + 20, oy);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Red glowing dot at the overshoot point
       ctx.fillStyle = COLORS.overshoot;
       ctx.shadowColor = COLORS.overshoot;
       ctx.shadowBlur = 10 * pulse;
@@ -350,14 +341,12 @@ export default function FourierPhasors() {
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Small ring to distinguish from the moving gold dot
       ctx.strokeStyle = COLORS.overshoot;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(ox, oy, 10, 0, 2 * Math.PI);
       ctx.stroke();
 
-      // Label
       ctx.fillStyle = COLORS.overshoot;
       ctx.font = "bold 12px 'Courier New', monospace";
       ctx.textAlign = "left";
@@ -476,13 +465,16 @@ export default function FourierPhasors() {
     ctx.strokeStyle = "rgba(255,255,255,0.1)";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(padL, midY - sqH); ctx.lineTo(padL + plotW / 2 - 1, midY - sqH);
+    ctx.moveTo(padL, midY - sqH);
+    ctx.lineTo(padL + plotW / 2 - 1, midY - sqH);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(padL + plotW / 2, midY - sqH); ctx.lineTo(padL + plotW / 2, midY + sqH);
+    ctx.moveTo(padL + plotW / 2, midY - sqH);
+    ctx.lineTo(padL + plotW / 2, midY + sqH);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(padL + plotW / 2 + 1, midY + sqH); ctx.lineTo(padL + plotW, midY + sqH);
+    ctx.moveTo(padL + plotW / 2 + 1, midY + sqH);
+    ctx.lineTo(padL + plotW, midY + sqH);
     ctx.stroke();
 
     // Highlighted arm contribution
@@ -497,7 +489,8 @@ export default function FourierPhasors() {
         const val = amp * Math.sin(k * theta) * 2;
         const x = padL + (i / 400) * plotW;
         const y = midY - (val / 1.2) * (plotH / 2);
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
       ctx.stroke();
       ctx.setLineDash([]);
@@ -516,10 +509,14 @@ export default function FourierPhasors() {
         const { k, amp } = getCoeff(h);
         val += amp * Math.sin(k * theta) * 2;
       }
-      if (Math.abs(val) > Math.abs(maxVal)) { maxVal = val; maxValX = padL + (i / Npts) * plotW; }
+      if (Math.abs(val) > Math.abs(maxVal)) {
+        maxVal = val;
+        maxValX = padL + (i / Npts) * plotW;
+      }
       const x = padL + (i / Npts) * plotW;
       const y = midY - (val / 1.2) * (plotH / 2);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     }
     ctx.stroke();
 
@@ -532,12 +529,15 @@ export default function FourierPhasors() {
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      ctx.moveTo(maxValX, markerY); ctx.lineTo(maxValX, targetY);
+      ctx.moveTo(maxValX, markerY);
+      ctx.lineTo(maxValX, targetY);
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = COLORS.overshoot;
       ctx.beginPath();
-      ctx.moveTo(maxValX - 4, markerY + 6); ctx.lineTo(maxValX + 4, markerY + 6); ctx.lineTo(maxValX, markerY);
+      ctx.moveTo(maxValX - 4, markerY + 6);
+      ctx.lineTo(maxValX + 4, markerY + 6);
+      ctx.lineTo(maxValX, markerY);
       ctx.fill();
       ctx.font = "bold 12px 'Courier New', monospace";
       ctx.textAlign = "left";
@@ -556,7 +556,8 @@ export default function FourierPhasors() {
     ctx.lineWidth = 1;
     ctx.setLineDash([2, 2]);
     ctx.beginPath();
-    ctx.moveTo(cursorX, padT); ctx.lineTo(cursorX, padT + plotH);
+    ctx.moveTo(cursorX, padT);
+    ctx.lineTo(cursorX, padT + plotH);
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -596,16 +597,19 @@ export default function FourierPhasors() {
     for (let i = 0; i <= 4; i++) {
       const y = padT + (plotH * i) / 4;
       ctx.beginPath();
-      ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y);
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + plotW, y);
       ctx.stroke();
     }
     ctx.strokeStyle = COLORS.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(padL, padT + plotH); ctx.lineTo(padL + plotW, padT + plotH);
+    ctx.moveTo(padL, padT + plotH);
+    ctx.lineTo(padL + plotW, padT + plotH);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + plotH);
+    ctx.moveTo(padL, padT);
+    ctx.lineTo(padL, padT + plotH);
     ctx.stroke();
 
     const targetY = padT + plotH - (ptsTarget / maxPTS) * plotH;
@@ -614,7 +618,8 @@ export default function FourierPhasors() {
       ctx.lineWidth = 1.5;
       ctx.setLineDash([6, 4]);
       ctx.beginPath();
-      ctx.moveTo(padL, targetY); ctx.lineTo(padL + plotW, targetY);
+      ctx.moveTo(padL, targetY);
+      ctx.lineTo(padL + plotW, targetY);
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = COLORS.pts;
@@ -649,10 +654,10 @@ export default function FourierPhasors() {
 
       if (isHL) {
         // Frequency contribution (top) — orange
-        ctx.fillStyle = `rgba(255,136,68,${0.7})`;
+        ctx.fillStyle = `rgba(255,136,68,0.7)`;
         ctx.fillRect(x, y, barW, freqBarH);
         // Amplitude contribution (bottom) — gold
-        ctx.fillStyle = `rgba(232,197,71,${0.7})`;
+        ctx.fillStyle = `rgba(232,197,71,0.7)`;
         ctx.fillRect(x, y + freqBarH, barW, ampBarH);
         ctx.strokeStyle = highlightArm === i ? COLORS.text : COLORS.pts;
         ctx.lineWidth = highlightArm === i ? 2 : 1;
@@ -742,11 +747,19 @@ export default function FourierPhasors() {
       animRef.current = requestAnimationFrame(loop);
     };
     animRef.current = requestAnimationFrame(loop);
-    return () => { running = false; cancelAnimationFrame(animRef.current); };
+    return () => {
+      running = false;
+      cancelAnimationFrame(animRef.current);
+    };
   }, [drawPhasors, drawWaveform, drawPTS, speed]);
 
-  useEffect(() => { trailRef.current = []; }, [numHarmonics]);
-  useEffect(() => { if (highlightArm > numHarmonics) setHighlightArm(0); }, [numHarmonics, highlightArm]);
+  useEffect(() => {
+    trailRef.current = [];
+  }, [numHarmonics]);
+
+  useEffect(() => {
+    if (highlightArm > numHarmonics) setHighlightArm(0);
+  }, [numHarmonics, highlightArm]);
 
   const btnStyle = (active, color) => ({
     padding: "6px 14px",
@@ -781,75 +794,150 @@ export default function FourierPhasors() {
       fontFamily: "'Georgia', serif",
       color: COLORS.text,
       padding: "20px",
+      boxSizing: "border-box",
     }}>
       <div style={{ maxWidth: 960, width: "100%" }}>
         <h1 style={{
-          fontSize: "1.6rem", color: COLORS.gold, fontWeight: 400,
-          letterSpacing: "0.03em", marginBottom: 4, textAlign: "center",
+          fontSize: "1.6rem",
+          color: COLORS.gold,
+          fontWeight: 400,
+          letterSpacing: "0.03em",
+          marginBottom: 4,
+          textAlign: "center",
         }}>
           The Gibbs Overshoot Is Built In
         </h1>
+
         <p style={{
-          fontSize: "0.95rem", color: COLORS.dim, marginBottom: 20,
-          fontStyle: "italic", textAlign: "center",
+          fontSize: "0.95rem",
+          color: COLORS.dim,
+          marginBottom: 20,
+          fontStyle: "italic",
+          textAlign: "center",
         }}>
           Every arm gets shorter — but spins faster. The tip speed converges to J/π. The overshoot never goes away.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
           <div style={{
-            position: "relative", paddingBottom: "100%", borderRadius: 8,
-            overflow: "hidden", border: `1px solid ${COLORS.grid}`,
+            position: "relative",
+            paddingBottom: "100%",
+            borderRadius: 8,
+            overflow: "hidden",
+            border: `1px solid ${COLORS.grid}`,
           }}>
-            <canvas ref={phasorCanvasRef} style={{
-              position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
-            }} />
+            <canvas
+              ref={phasorCanvasRef}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+              }}
+            />
           </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div style={{
-              position: "relative", paddingBottom: "50%", borderRadius: 8,
-              overflow: "hidden", border: `1px solid ${COLORS.grid}`,
+              position: "relative",
+              paddingBottom: "50%",
+              borderRadius: 8,
+              overflow: "hidden",
+              border: `1px solid ${COLORS.grid}`,
             }}>
-              <canvas ref={waveCanvasRef} style={{
-                position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
-              }} />
+              <canvas
+                ref={waveCanvasRef}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </div>
+
             <div style={{
-              position: "relative", paddingBottom: "50%", borderRadius: 8,
-              overflow: "hidden", border: `1px solid ${COLORS.grid}`,
+              position: "relative",
+              paddingBottom: "50%",
+              borderRadius: 8,
+              overflow: "hidden",
+              border: `1px solid ${COLORS.grid}`,
             }}>
-              <canvas ref={ptsCanvasRef} style={{
-                position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
-              }} />
+              <canvas
+                ref={ptsCanvasRef}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </div>
           </div>
         </div>
 
         <div style={{
-          padding: "16px 20px", background: "#0e0e18", borderRadius: 8,
-          border: `1px solid ${COLORS.grid}`, marginBottom: 12,
+          padding: "16px 20px",
+          background: "#0e0e18",
+          borderRadius: 8,
+          border: `1px solid ${COLORS.grid}`,
+          marginBottom: 12,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
             <label style={{ fontSize: "0.9rem", color: COLORS.dim, minWidth: 90 }}>Harmonics</label>
-            <input type="range" min={1} max={40} step={1} value={numHarmonics}
+            <input
+              type="range"
+              min={1}
+              max={40}
+              step={1}
+              value={numHarmonics}
               onChange={(e) => setNumHarmonics(Number(e.target.value))}
-              style={{ flex: 1, accentColor: COLORS.gold }} />
-            <span style={{ fontFamily: "'Courier New', monospace", fontSize: "0.9rem", color: COLORS.gold, minWidth: 30, textAlign: "right" }}>
+              style={{ flex: 1, accentColor: COLORS.gold }}
+            />
+            <span style={{
+              fontFamily: "'Courier New', monospace",
+              fontSize: "0.9rem",
+              color: COLORS.gold,
+              minWidth: 30,
+              textAlign: "right",
+            }}>
               {numHarmonics}
             </span>
           </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
             <label style={{ fontSize: "0.9rem", color: COLORS.dim, minWidth: 90 }}>Speed</label>
-            <input type="range" min={0.1} max={3.0} step={0.1} value={speed}
+            <input
+              type="range"
+              min={0.1}
+              max={3.0}
+              step={0.1}
+              value={speed}
               onChange={(e) => setSpeed(Number(e.target.value))}
-              style={{ flex: 1, accentColor: COLORS.gold }} />
-            <span style={{ fontFamily: "'Courier New', monospace", fontSize: "0.9rem", color: COLORS.gold, minWidth: 30, textAlign: "right" }}>
+              style={{ flex: 1, accentColor: COLORS.gold }}
+            />
+            <span style={{
+              fontFamily: "'Courier New', monospace",
+              fontSize: "0.9rem",
+              color: COLORS.gold,
+              minWidth: 30,
+              textAlign: "right",
+            }}>
               {speed.toFixed(1)}×
             </span>
           </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
             <label style={{ fontSize: "0.9rem", color: COLORS.dim, minWidth: 90 }}>Position</label>
-            <input type="range" min={0} max={360} step={0.5} value={manualPos}
+            <input
+              type="range"
+              min={0}
+              max={360}
+              step={0.5}
+              value={manualPos}
               onChange={(e) => {
                 const deg = Number(e.target.value);
                 setManualPos(deg);
@@ -857,35 +945,56 @@ export default function FourierPhasors() {
                 timeRef.current = (deg / 180) * Math.PI;
                 trailRef.current = [];
               }}
-              style={{ flex: 1, accentColor: COLORS.blue }} />
-            <span style={{ fontFamily: "'Courier New', monospace", fontSize: "0.9rem", color: COLORS.blue, minWidth: 42, textAlign: "right" }}>
+              style={{ flex: 1, accentColor: COLORS.blue }}
+            />
+            <span style={{
+              fontFamily: "'Courier New', monospace",
+              fontSize: "0.9rem",
+              color: COLORS.blue,
+              minWidth: 42,
+              textAlign: "right",
+            }}>
               {manualPos.toFixed(0)}°
             </span>
           </div>
+
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
             <button onClick={() => setPlaying(!playing)} style={btnStyle(playing, COLORS.gold)}>
               {playing ? "Pause" : "Play"}
             </button>
+
             <button onClick={() => setShowTrail(!showTrail)} style={btnStyle(showTrail, COLORS.gold)}>
               {showTrail ? "Hide" : "Show"} orbits
             </button>
+
             <button onClick={() => setShowVelocity(!showVelocity)} style={btnStyle(showVelocity, COLORS.velocity)}>
               {showVelocity ? "Hide" : "Show"} velocity
             </button>
+
             <button onClick={() => setShowArmVectors(!showArmVectors)} style={btnStyle(showArmVectors, "#da77f2")}>
               {showArmVectors ? "Hide" : "Show"} arm vectors
             </button>
+
             <button onClick={() => setShowPTSLine(!showPTSLine)} style={btnStyle(showPTSLine, COLORS.pts)}>
               {showPTSLine ? "Hide" : "Show"} J/π
             </button>
-            <button onClick={() => { timeRef.current = 0; trailRef.current = []; }} style={btnStyle(false, COLORS.dim)}>
+
+            <button onClick={() => {
+              timeRef.current = 0;
+              trailRef.current = [];
+            }} style={btnStyle(false, COLORS.dim)}>
               Reset
             </button>
           </div>
 
           <div style={{
-            display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
-            justifyContent: "center", borderTop: `1px solid ${COLORS.grid}`, paddingTop: 12,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+            justifyContent: "center",
+            borderTop: `1px solid ${COLORS.grid}`,
+            paddingTop: 12,
           }}>
             <span style={{ fontSize: "0.82rem", color: COLORS.dim }}>Inspect arm:</span>
             <button onClick={() => setHighlightArm(0)} style={armBtnStyle(0)}>All</button>
@@ -898,8 +1007,12 @@ export default function FourierPhasors() {
         </div>
 
         <div style={{
-          padding: "16px 20px", background: "#0e0e18", borderRadius: 8,
-          border: `1px solid ${COLORS.grid}`, fontSize: "0.9rem", lineHeight: 1.7,
+          padding: "16px 20px",
+          background: "#0e0e18",
+          borderRadius: 8,
+          border: `1px solid ${COLORS.grid}`,
+          fontSize: "0.9rem",
+          lineHeight: 1.7,
         }}>
           <div style={{ display: "flex", gap: 20, marginBottom: 12, flexWrap: "wrap" }}>
             <span><span style={{ color: COLORS.gold }}>━━</span> Phasor arms</span>
@@ -909,6 +1022,7 @@ export default function FourierPhasors() {
             <span><span style={{ color: COLORS.overshoot }}>━━</span> Gibbs overshoot</span>
             <span><span style={{ color: COLORS.pts }}>╌╌</span> J/π plateau</span>
           </div>
+
           <p style={{ color: COLORS.dim, margin: "8px 0 0 0" }}>
             The <span style={{ color: COLORS.velocity }}>orange arrow</span> shows the instantaneous
             velocity of the <span style={{ color: COLORS.gold }}>resultant tip</span> — the endpoint
@@ -917,6 +1031,7 @@ export default function FourierPhasors() {
             Near the discontinuity, all contributions align and the resultant tip accelerates.
             That is the overshoot — the chain tip racing through 0.637 because every arm pushes in the same direction.
           </p>
+
           <p style={{ color: COLORS.dim, margin: "8px 0 0 0" }}>
             The two-tone bars decompose each arm's tip speed into
             <span style={{ color: COLORS.velocity }}> frequency multiplier</span> ×
@@ -930,4 +1045,10 @@ export default function FourierPhasors() {
       </div>
     </div>
   );
+}
+
+const container = document.getElementById("root");
+if (container) {
+  const root = ReactDOM.createRoot(container);
+  root.render(<FourierPhasors />);
 }
