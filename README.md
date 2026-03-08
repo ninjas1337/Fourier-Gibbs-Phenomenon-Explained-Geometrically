@@ -39,7 +39,7 @@ Show J/π — the target plateau on the PTS spectrum
 Inspect arm — click an arm number to highlight it across all three panels
 Show orbits — ghost circles for each harmonic
 
-HERE IS THE FULL PAPER ON THE GIBBS PHENOMENA AND THIS INTUITIVE APPROACH EXPLAINED MATHEMATICALLY: /assets/Gibbs_Phenomenon___A_Kinematic_Phasor_Approach.pdf
+HERE IS THE FULL PAPER ON THE GIBBS PHENOMENA AND THIS INTUITIVE APPROACH EXPLAINED MATHEMATICALLY: [Open assets folder](assets/Gibbs_Phenomenon___A_Kinematic_Phasor_Approach.pdf)
 
 
 See also
