@@ -6,7 +6,11 @@ https://ninjas1337.github.io/Fourier-Gibbs-Phenomenon-Explained-Geometrically/
 An inuitive approach to Fourier and an geometrical explanation of the Gibbs Phenomenon
 The Gibbs Overshoot Is Built In
 An interactive visualization showing why the Gibbs overshoot exists, why it converges to ≈ 8.95%, and why it can never go away — explained geometrically through phasor chains and tip speed.
-Motivation
+Motivation.
+
+The BIG trick is to look at the arm vectors and remember that the phasor chain is the complex plane :)
+
+
 Most Fourier series demonstrations show you that the overshoot happens. This one shows you why.
 When I studied Fourier series, I was told the Gibbs phenomenon is an unavoidable artifact of approximating a discontinuity with smooth functions. That is true, but it is not satisfying. It does not tell you what is actually happening.
 What made it click for me was looking at the phasor chain — the rotating vector arms that build up a Fourier partial sum — and noticing something:
@@ -89,7 +93,7 @@ Show orbits — ghost circles for each harmonic
 HERE IS THE FULL PAPER ON THE GIBBS PHENOMENA AND THIS INTUITIVE APPROACH EXPLAINED MATHEMATICALLY: [Open assets folder](assets/Gibbs_Phenomenon___A_Kinematic_Phasor_Approach.pdf)
 
 
-See also
+For perhaps a better intuitive understanding of complex numbers also see my other repo: https://ninjas1337.github.io/Imaginary-numbers-are-real/ 
 
 Complex Numbers Are Not Imaginary — a companion project showing what a complex number is, geometrically, through a tilting circle with radius π.
 
