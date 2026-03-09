@@ -1,6 +1,6 @@
 # Fourier-Gibbs-Phenomenon-Explained-Geometrically
 ![Preview](assets/preview.png)
-https://ninjas1337.github.io/Fourier-Gibbs-Phenomenon-Explained-Geometrically/
+[Live Demo](https://ninjas1337.github.io/your-repo-name/)
 
 
 An inuitive approach to Fourier and an geometrical explanation of the Gibbs Phenomenon
