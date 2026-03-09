@@ -31,6 +31,50 @@ There is a subtlety visible in the visualization: the Gibbs peak does not occur 
 This is the same π/2 phase relationship between velocity and displacement that governs every oscillating system. The partial sum is the integral of the Dirichlet kernel. The peak of an integral always lags the peak of the integrand. The same π/2 that lives in every AC phasor diagram lives here too.
 What it is not
 This is not conservation of angular momentum. The visual resemblance is striking — shorter arms, faster spin, constant product — but the mechanism is different. In a physical system, angular momentum is conserved through dynamic compensation (Noether's theorem, rotational symmetry). Here, nothing is being conserved or exchanged. Each phasor arm has a fixed radius and a fixed spin rate from the moment it exists. The equality of tip speeds is a structural fingerprint of the discontinuity, not a physical law.
+
+The big WHY:
+## How the overshoot works: vector addition!
+
+At position θ = 0 (the discontinuity), every arm's velocity
+contribution points in the same direction. The vectors are fully
+aligned. The resultant velocity is at its maximum — it is the scalar
+sum of all individual tip speeds, approximately N × J/(2π). The chain
+tip is racing upward through the midpoint of the jump at full speed.
+
+As θ advances, each arm's velocity vector rotates at a rate
+proportional to its harmonic number k. Higher harmonics rotate faster.
+The vectors fan out. The resultant — obtained by vector addition — is
+still mostly upward, but shrinking as the fan opens.
+
+The overshoot is the **accumulated displacement** during this process:
+the integral of the resultant velocity from full alignment (θ = 0) to
+the point where the vectors first form a semicircle (θ ≈ π/N). At the
+semicircle, the resultant velocity has decayed to near zero — the
+vectors partially cancel — and the chain tip stops climbing. That is
+the Gibbs peak.
+
+The total displacement accumulated during the fanning process is:
+
+```
+S_N(x₀ + π/N) - f(x₀⁻)  →  (J/π) · Si(π)  ≈  1.18 · J/2
+```
+
+which exceeds the target midpoint value by approximately 8.95%.
+
+**Why it never vanishes:** adding more harmonics has two effects that
+cancel exactly. The initial resultant velocity grows (more aligned
+vectors), but the interval shrinks (the semicircle is reached at a
+smaller angle, π/N). The product — velocity × interval width — remains
+constant. In the limit, the discrete vector sum becomes the continuous
+integral Si(π), and the overshoot converges to J(Si(π)/π − 1/2) ≈
+0.0895 J.
+
+Nothing is approximated away. The overshoot is a geometric
+consequence of summing equal-length vectors that fan from alignment
+into a semicircle. The displacement accumulated during that fanning is
+a definite integral — Si(π) — and it is independent of N.
+
+
 How to use it
 
 Harmonics slider — add or remove Fourier harmonics
