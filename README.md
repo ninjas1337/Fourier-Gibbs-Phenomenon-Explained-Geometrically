@@ -27,12 +27,12 @@ The key insight
 At a discontinuity, the Fourier coefficient of the k-th harmonic decays as Aₖ ~ J/(kπ). The phasor tip speed is:
 PTSₖ = k · Aₖ → J/π
 Every harmonic contributes equally to the tip velocity. No harmonic is more or less active than any other. When these equal contributions align at the discontinuity, the resultant tip races past the target value. Adding more harmonics adds more equal-speed contributors that also align — the surge does not weaken, it just gets narrower.
-The overshoot converges to:
-Si(π)/π ≈ 1.0895
-which is approximately 8.95% above the target. This is a consequence of equal-length vectors fanning from alignment into a semicircle. The ratio of the chord to the arc at the point of maximum displacement is Si(π)/π. It is a geometric constant — a signature of Euclidean space.
+The peak, measured from the lower level of the jump in units of J, converges to:
+1/2 + Si(π)/π ≈ 1.0895
+so it sits approximately 8.95% of the jump above the upper level. Here Si(π) ≈ 1.8519 and Si(π)/π ≈ 0.5895. This is a consequence of equal-length vectors fanning from alignment into a semicircle. At the point of maximum displacement the velocity vectors span a semicircle, whose chord-to-arc ratio is 2/π ≈ 0.637. The overshoot constant itself comes from accumulating the fan along the way, which gives Si(π).
 The π/2 phase lag
 There is a subtlety visible in the visualization: the Gibbs peak does not occur at the same angle as the maximum resultant velocity. The velocity peaks at the discontinuity (θ = 0), but the overshoot peak occurs slightly after, at θ ≈ π/N.
-This is the same π/2 phase relationship between velocity and displacement that governs every oscillating system. The partial sum is the integral of the Dirichlet kernel. The peak of an integral always lags the peak of the integrand. The same π/2 that lives in every AC phasor diagram lives here too.
+At that point the bisector of the velocity fan has turned through exactly π/2 from its direction at the jump. The semicircle's chord now points perpendicular to the original alignment, so the real velocity of the partial sum is zero and the tip stops climbing. That quarter turn is the same π/2 between velocity and displacement that lives in every AC phasor diagram. In the waveform itself, the partial sum is the integral of the Dirichlet kernel, and the peak sits at the kernel's first zero, half a period of its oscillation after the jump.
 What it is not
 This is not conservation of angular momentum. The visual resemblance is striking — shorter arms, faster spin, constant product — but the mechanism is different. In a physical system, angular momentum is conserved through dynamic compensation (Noether's theorem, rotational symmetry). Here, nothing is being conserved or exchanged. Each phasor arm has a fixed radius and a fixed spin rate from the moment it exists. The equality of tip speeds is a structural fingerprint of the discontinuity, not a physical law.
 
@@ -42,7 +42,7 @@ The big WHY:
 At position θ = 0 (the discontinuity), every arm's velocity
 contribution points in the same direction. The vectors are fully
 aligned. The resultant velocity is at its maximum — it is the scalar
-sum of all individual tip speeds, approximately N × J/(2π). The chain
+sum of all individual tip speeds, approximately N × J/π. The chain
 tip is racing upward through the midpoint of the jump at full speed.
 
 As θ advances, each arm's velocity vector rotates at a rate
@@ -53,17 +53,19 @@ still mostly upward, but shrinking as the fan opens.
 The overshoot is the **accumulated displacement** during this process:
 the integral of the resultant velocity from full alignment (θ = 0) to
 the point where the vectors first form a semicircle (θ ≈ π/N). At the
-semicircle, the resultant velocity has decayed to near zero — the
-vectors partially cancel — and the chain tip stops climbing. That is
-the Gibbs peak.
+semicircle, the fan's bisector has turned through π/2, so the real
+part of the resultant velocity is exactly zero, and the chain tip
+stops climbing. That is the Gibbs peak.
 
-The total displacement accumulated during the fanning process is:
+The total displacement accumulated during the fanning process, measured
+from the midpoint of the jump m = [f(x₀⁻) + f(x₀⁺)]/2, is:
 
 ```
-S_N(x₀ + π/N) - f(x₀⁻)  →  (J/π) · Si(π)  ≈  1.18 · J/2
+S_N(x₀ + π/N) − m  →  (J/π) · Si(π)  ≈  1.18 · J/2
 ```
 
-which exceeds the target midpoint value by approximately 8.95%.
+which exceeds the upper level f(x₀⁺) = m + J/2 by approximately 0.0895 J,
+that is 8.95% of the jump.
 
 **Why it never vanishes:** adding more harmonics has two effects that
 cancel exactly. The initial resultant velocity grows (more aligned
